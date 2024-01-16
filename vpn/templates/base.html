@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <title>TSC VPN</title>
+</head>
+
+<body>
+
+  {% block content %}
+
+  {% endblock %}
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+<!-- ALL CSS STYLES HERE -->
+<style>
+  @font-face { font-family: Poppins;
+               font-style: normal;
+               font-weight: 200;
+               font-display: swap;
+			   src: url('/font/Poppins-Light.ttf'); }
+
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+  }
+
+  body {
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(75, 14, 154, 1) 35%, rgba(0, 212, 255, 1) 100%);
+    font-family: 'Poppins', sans-serif;
+
+  }
+
+  form {
+    border-radius: 20px;
+    margin-top: 150px !important;
+    width: 24% !important;
+    background-color: white !important;
+    padding: 50px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(75, 14, 154, 1) 35%, rgba(0, 212, 255, 1) 100%);
+
+  }
+
+  .form-control {
+    color: rgba(0, 0, 0, .87);
+    border-bottom-color: rgba(0, 0, 0, .42);
+    box-shadow: none !important;
+    border: none;
+    border-bottom: 1px solid;
+    border-radius: 4px 4px 0 0;
+  }
+
+  h4 {
+    font-size: 2rem !important;
+    font-weight: 700;
+  }
+
+  .form-label {
+    font-weight: 800 !important;
+  }
+
+  @media only screen and (max-width: 600px) {
+    form {
+      width: 100% !important;
+    }
+  }
+</style>
+
+</html>
