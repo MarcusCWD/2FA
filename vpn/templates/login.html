@@ -1,19 +1,34 @@
 {% extends 'base.html' %}
     {% block content %}
         <div class="container-fluid">
-            <form class="mx-auto">
-                <h4 class="text-center">Login</h4>
+            <form novalidate method="POST" class="form-register, mx-auto">
+                <!--CSRF token hidden-->
+                {{ form.hidden_tag() }}
+                <h4 class="text-center">VPN Login</h4>
                 <div class="mb-3 mt-5">
-                  <label for="exampleInputEmail1" class="form-label">User Name</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <label class="form-label">Email Address</label>
+                    {{ form.email(type="email",class="form-control", id="exampleInputEmail1") }}
+                    <small class="form-text text-muted">
+                        {{ ("%s"%(form.errors['email']))[2:-2] }}
+                    </small>
                 </div>
                 <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                  <div id="emailHelp" class="form-text mt-3">Forget password ?</div>
+                  <label class="form-label">OTP Code</label>
+                      {{ form.otp(type="password",class="form-control", id="exampleInputPassword1") }}
+                    <small class="form-text text-muted">
+                        {{ ("%s"%(form.errors['otp']))[2:-2]}}
+                    </small>
+                    {% if isotpfail %}
+                        <small class="form-text text-muted">
+                            Invalid OTP Code
+                        </small>
+                    {% endif%}
+                  <div id="emailHelp" class="form-text mt-3">Code doesn't work?
+                      <a href="{{url_for('register_page')}}">Click Here</a>
+                  </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-5">Login</button>
+                {{ form.login(type="submit", class="btn btn-primary mt-5")}}
               </form>
         </div>
     {% endblock %}

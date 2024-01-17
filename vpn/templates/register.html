@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+    {% block content %}
+        <div class="container-fluid">
+
+            <form novalidate method="POST" class="form-register, mx-auto">
+                <!--CSRF token hidden-->
+                {{ form.hidden_tag() }}
+                <!--Only when qr_img is valid-->
+                {% if qr_img %}
+                <div class="d-flex justify-content-center">
+                    <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <p>Latest QR generated! Please remove any pre-existing token within your authenticator!</p>
+                </div>
+
+                <!--else it will be to the register/Rest QR view-->
+                {% else %}
+                <h4 class="text-center">Register/ Reset QR</h4>
+                <div class="mb-3 mt-5">
+                  <label class="form-label">Email Address</label>
+                    {{ form.email(type="email",class="form-control", id="exampleInputEmail1") }}
+                    <small class="form-text text-muted">
+                        {{ ("%s"%(form.errors['email']))[2:-2] }}
+                    </small>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Epin</label>
+                      {{ form.epin(type="password",class="form-control", id="exampleInputPassword1") }}
+                    <small class="form-text text-muted">
+                        {{ ("%s"%(form.errors['epin']))[2:-2]}}
+                    </small>
+                    {% if isepinfail %}
+                        <small class="form-text text-muted">
+                            Invalid Epin
+                        </small>
+                    {% endif%}
+                </div>
+                {{ form.generate(type="submit", class="btn btn-primary mt-5")}}
+                {% endif %}
+              </form>
+                <br>
+                <div class="d-flex justify-content-center">
+                    <a type="button" class="btn btn-light" href="{{ url_for('login_page') }}">Back to Login</a>
+                </div>
+
+        </div>
+    {% endblock %}

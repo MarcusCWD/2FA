@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Date, Boolean, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -10,8 +10,16 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer(), primary_key=True)
-    username = Column(String(length=30), nullable=False, unique=True)
-    email_address = Column(String(length=50), nullable=False, unique=True)
-    password = Column(String(length=60), nullable=False)
-    budget = Column(Integer(), nullable=False, default=1000)
-    items = relationship('Item', backref='owned_user', lazy=True)
+    email_address = Column(String(length=320), nullable=False, unique=True)
+    epin = Column(Integer(), nullable=False)
+    secret = Column(String(length=180), nullable=False)
+    last_login = Column(Date(), nullable=True)
+    active = Column(Boolean(), nullable=False, default=True)
+
+
+class Admin(Base):
+    __tablename__ = 'admin'
+
+    id = Column(Integer(), primary_key=True)
+    email_address = Column(String(length=320), nullable=False, unique=True)
+    password = Column(String(length=12), nullable=False)
