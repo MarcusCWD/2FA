@@ -1,6 +1,6 @@
 import base64
 from vpn import app
-from flask import render_template, redirect, url_for, flash, abort, send_file
+from flask import render_template, redirect, url_for, abort
 from vpn.models import User
 from vpn import db
 from vpn.forms import LoginForm, RegisterForm
@@ -20,6 +20,7 @@ def login_page():
             user_dbaccess = db.query(User).filter_by(email_address=form.email.data).first()
             # translate query, map to needed fields
             user_list = [{'id': user_dbaccess.id, 'email_address': user_dbaccess.email_address, 'secret': user_dbaccess.secret, 'last_login': user_dbaccess.last_login, 'active': user_dbaccess.active}]
+            db.close()
             # Verify TOTP
             totp = pyotp.TOTP(user_list[0]['secret'])
             if totp.verify(form.otp.data):
