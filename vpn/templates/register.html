@@ -20,9 +20,11 @@
                 <div class="mb-3 mt-5">
                   <label class="form-label">Email Address</label>
                     {{ form.email(type="email",class="form-control", id="exampleInputEmail1") }}
-                    <small class="form-text text-muted">
-                        {{ ("%s"%(form.errors['email']))[2:-2] }}
-                    </small>
+                    {% if form.errors['email'] %}
+                        <small class="form-text text-muted">
+                            {{ form.errors['email'].0}}
+                        </small>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Epin</label>

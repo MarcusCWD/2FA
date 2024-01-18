@@ -11,7 +11,7 @@ class User(Base):
 
     id = Column(Integer(), primary_key=True)
     email_address = Column(String(length=320), nullable=False, unique=True)
-    epin = Column(Integer(), nullable=False)
+    epin = Column(String(3000), nullable=False)
     secret = Column(String(length=180), nullable=False)
     last_login = Column(Date(), nullable=True)
     active = Column(Boolean(), nullable=False, default=True)

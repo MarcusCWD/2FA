@@ -7,7 +7,7 @@ from vpn.forms import LoginForm, RegisterForm
 import qrcode
 import pyotp
 from io import BytesIO
-
+from vpn import bcrypt
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,7 +33,6 @@ def login_page():
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
-
     if form.validate_on_submit():
         if form.errors == {}:
             user_dbaccess = db.query(User).filter_by(email_address=form.email.data).first()
@@ -41,7 +40,7 @@ def register_page():
             user_list = [{'id': user_dbaccess.id, 'email_address':user_dbaccess.email_address, 'epin': user_dbaccess.epin, 'last_login': user_dbaccess.last_login, 'active': user_dbaccess.active}]
 
             if user_dbaccess:
-                if int(user_list[0]['epin']) == int(form.epin.data):
+                if bcrypt.check_password_hash(user_list[0]['epin'], str(form.epin.data)):
                     # Generate TOTP secret and URL for QR code
                     secret = pyotp.random_base32()
                     user_dbaccess.secret = secret
@@ -69,7 +68,7 @@ def register_page():
                     return render_template('register.html', qr_img=qr_img_str, form=form)
 
                 else:
-                    print("epin fail")
+                    db.close()
                     isepinfail = True
                     return render_template('register.html', form=form, isepinfail=isepinfail)
 

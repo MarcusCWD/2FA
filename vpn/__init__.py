@@ -8,14 +8,17 @@ from sqlalchemy.orm import Session
 from vpn.models import Base
 from vpn.dbconnection import engine
 import os
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__,
             static_url_path='',
             static_folder='static',
             )
 
+bcrypt = Bcrypt(app)
+
 # SECRET_KEY is used for CSRF
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('CSRF_SECRET_KEY')
 
 # Create the database tables (SERIOUSLY. REMEMBER TO DELETE)
 Base.metadata.create_all(bind=engine)
