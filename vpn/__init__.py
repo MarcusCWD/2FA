@@ -9,9 +9,6 @@ from vpn.models import Base
 from vpn.dbconnection import engine
 import os
 from flask_bcrypt import Bcrypt
-import logging
-
-logging.disable(logging.WARNING)
 
 app = Flask(__name__,
             static_url_path='',
@@ -23,8 +20,9 @@ bcrypt = Bcrypt(app)
 # SECRET_KEY is used for CSRF
 app.config['SECRET_KEY'] = os.environ.get('CSRF_SECRET_KEY')
 
-# Create the database tables (SERIOUSLY. REMEMBER TO DELETE)
-# Base.metadata.create_all(bind=engine)
+# Create the database tables
+if os.environ.get('DEVELOPER_MODE'):
+    Base.metadata.create_all(bind=engine)
 
 # Create a SQLAlchemy session
 db = Session(bind=engine)
