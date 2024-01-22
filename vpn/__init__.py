@@ -21,7 +21,7 @@ bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = os.environ.get('CSRF_SECRET_KEY')
 
 # Create the database tables (SERIOUSLY. REMEMBER TO DELETE)
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 # Create a SQLAlchemy session
 db = Session(bind=engine)
