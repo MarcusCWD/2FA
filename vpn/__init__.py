@@ -11,8 +11,7 @@ import os
 from flask_bcrypt import Bcrypt
 import logging
 
-logger = logging.getLogger()
-logger.disabled = True
+logging.disable(logging.WARNING)
 
 app = Flask(__name__,
             static_url_path='',
