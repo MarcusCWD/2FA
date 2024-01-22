@@ -9,6 +9,10 @@ from vpn.models import Base
 from vpn.dbconnection import engine
 import os
 from flask_bcrypt import Bcrypt
+import logging
+
+logger = logging.getLogger()
+logger.disabled = True
 
 app = Flask(__name__,
             static_url_path='',
