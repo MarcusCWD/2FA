@@ -14,7 +14,7 @@ class User(Base):
     epin = Column(String(3000), nullable=False)
     secret = Column(String(length=180), nullable=False)
     last_login = Column(Date(), nullable=True)
-    register_date = Column(Date(), nullable=False)
+    # register_date = Column(Date(), nullable=False)
     active = Column(Boolean(), nullable=False, default=True)
 
 
