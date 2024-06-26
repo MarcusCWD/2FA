@@ -47,7 +47,7 @@ def register_page():
                     db.commit()
                     db.close()
 
-                    totp_url = pyotp.totp.TOTP(secret).provisioning_uri(issuer_name='TSC-VPN', name=user_list[0]['email_address'])
+                    totp_url = pyotp.totp.TOTP(secret).provisioning_uri(issuer_name='2FA-Celeae.shop', name=user_list[0]['email_address'])
 
                     # Generate QR code for TOTP URL
                     qr = qrcode.QRCode(
