@@ -6,6 +6,7 @@ from vpn import db
 from vpn.forms import LoginForm, RegisterForm
 import qrcode
 import pyotp
+from sqlalchemy.exc import SQLAlchemyError
 from io import BytesIO
 from vpn import bcrypt
 
@@ -34,43 +35,46 @@ def login_page():
 def register_page():
     form = RegisterForm()
     if form.validate_on_submit():
-        if form.errors == {}:
-            user_dbaccess = db.query(User).filter_by(email_address=form.email.data).first()
-            # translate query, map to needed fields
-            user_list = [{'id': user_dbaccess.id, 'email_address':user_dbaccess.email_address, 'epin': user_dbaccess.epin, 'last_login': user_dbaccess.last_login, 'active': user_dbaccess.active}]
+        try:
+            if form.errors == {}:
+                user_dbaccess = db.query(User).filter_by(email_address=form.email.data).first()
+                # translate query, map to needed fields
+                user_list = [{'id': user_dbaccess.id, 'email_address':user_dbaccess.email_address, 'epin': user_dbaccess.epin, 'last_login': user_dbaccess.last_login, 'active': user_dbaccess.active}]
 
-            if user_dbaccess:
-                if bcrypt.check_password_hash(user_list[0]['epin'], str(form.epin.data)):
-                    # Generate TOTP secret and URL for QR code
-                    secret = pyotp.random_base32()
-                    user_dbaccess.secret = secret
-                    db.commit()
-                    db.close()
+                if user_dbaccess:
+                    if bcrypt.check_password_hash(user_list[0]['epin'], str(form.epin.data)):
+                        # Generate TOTP secret and URL for QR code
+                        secret = pyotp.random_base32()
+                        user_dbaccess.secret = secret
+                        db.commit()
+                        db.close()
 
-                    totp_url = pyotp.totp.TOTP(secret).provisioning_uri(issuer_name='2FA-Celeae.shop', name=user_list[0]['email_address'])
+                        totp_url = pyotp.totp.TOTP(secret).provisioning_uri(issuer_name='2FA-Celeae.shop', name=user_list[0]['email_address'])
 
-                    # Generate QR code for TOTP URL
-                    qr = qrcode.QRCode(
-                        version=1,
-                        error_correction=qrcode.constants.ERROR_CORRECT_L,
-                        box_size=6,
-                        border=4,
-                    )
-                    qr.add_data(totp_url)
-                    qr.make(fit=True)
-                    qr_img = qr.make_image(fill_color="black", back_color="white")
+                        # Generate QR code for TOTP URL
+                        qr = qrcode.QRCode(
+                            version=1,
+                            error_correction=qrcode.constants.ERROR_CORRECT_L,
+                            box_size=6,
+                            border=4,
+                        )
+                        qr.add_data(totp_url)
+                        qr.make(fit=True)
+                        qr_img = qr.make_image(fill_color="black", back_color="white")
 
-                    # Convert QR code image to base64
-                    buffered = BytesIO()
-                    qr_img.save(buffered, format='PNG')
-                    qr_img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                        # Convert QR code image to base64
+                        buffered = BytesIO()
+                        qr_img.save(buffered, format='PNG')
+                        qr_img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-                    return render_template('register.html', qr_img=qr_img_str, form=form)
+                        return render_template('register.html', qr_img=qr_img_str, form=form)
 
-                else:
-                    db.close()
-                    isepinfail = True
-                    return render_template('register.html', form=form, isepinfail=isepinfail)
-
-
+                    else:
+                        db.close()
+                        isepinfail = True
+                        return render_template('register.html', form=form, isepinfail=isepinfail)
+        except SQLAlchemyError as e:
+            # Rollback the transaction in case of error
+            db.session.rollback()
+            print("An error occurred:", e)
     return render_template('register.html', form=form)
