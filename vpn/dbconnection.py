@@ -17,4 +17,4 @@ DATABASE_URL = (
     + os.environ.get('DATABASE_NAME')
 )
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, pool_recycle=280)
